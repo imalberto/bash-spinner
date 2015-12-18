@@ -27,17 +27,27 @@ function _spinner() {
     # on stop : $2 process exit status
     #           $3 spinner function pid (supplied from stop_spinner)
 
-    local on_success="DONE"
-    local on_fail="FAIL"
-    local white="\e[1;37m"
-    local green="\e[1;32m"
-    local red="\e[1;31m"
-    local nc="\e[0m"
+    # Use this link for UTF8 checks
+    # http://www.utf8-chartable.de/unicode-utf8-table.pl?start=9984&names=2&utf8=-&unicodeinhtml=hex
+    local on_success="✔"
+    local on_fail="✘"
+    local white=""
+    local green=""
+    local red=""
+    local nc=""
+
+    ## local on_success="DONE"
+    ## local on_fail="FAIL"
+    ## local white="\e[1;37m"
+    ## local green="\e[1;32m"
+    ## local red="\e[1;31m"
+    ## local nc="\e[0m"
 
     case $1 in
         start)
             # calculate the column where spinner and status msg will be displayed
-            let column=$(tput cols)-${#2}-8
+            ## let column=$(tput cols)-${#2}-8
+            let column=2
             # display message and position the cursor in $column column
             echo -ne ${2}
             printf "%${column}s"
@@ -62,13 +72,15 @@ function _spinner() {
             kill $3 > /dev/null 2>&1
 
             # inform the user uppon success or failure
-            echo -en "\b["
+            ## echo -en "\b["
+            echo -en "\b" ## Need to delete (\b) the previous animator
             if [[ $2 -eq 0 ]]; then
                 echo -en "${green}${on_success}${nc}"
             else
                 echo -en "${red}${on_fail}${nc}"
             fi
-            echo -e "]"
+            ## echo -e "]"
+            echo -e ""
             ;;
         *)
             echo "invalid argument, try {start/stop}"
